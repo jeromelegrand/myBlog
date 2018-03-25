@@ -3,6 +3,7 @@
 namespace App\Managers;
 
 
+use App\Entities\Article;
 use \PDO;
 
 /**
@@ -34,18 +35,64 @@ class ArticlesManager
     {
         $query = 'SELECT * FROM article';
         $data = $this->bdd->query($query);
-        $articles = $data->fetchAll(PDO::FETCH_ASSOC);
+        $articlesDatas = $data->fetchAll(PDO::FETCH_ASSOC);
 
+        $articles = [];
+        foreach ($articlesDatas as $article) {
+            $articles[] = new Article($article);
+        }
         return $articles;
     }
 
-    public function addArticle(string $title, string $author, string $message)
+    public function selectOne(int $id): Article
     {
+        $query = 'SELECT * FROM article WHERE id=:id';
+        $data = $this->bdd->prepare($query);
+        $data->bindValue(':id', $id, PDO::PARAM_INT);
+
+        $data->execute();
+
+        $articleData = $data->fetch(PDO::FETCH_ASSOC);
+        $article = new Article($articleData);
+
+        return $article;
+    }
+
+    public function addArticle(Article $article): void
+    {
+
         $query = 'INSERT INTO article (title, author, message) VALUES (:title, :author, :message)';
         $prepare = $this->bdd->prepare($query);
-        $prepare->bindValue(':title', $title, PDO::PARAM_STR);
-        $prepare->bindValue(':author', $author, PDO::PARAM_STR);
-        $prepare->bindValue(':message', $message, PDO::PARAM_STR);
+        $prepare->bindValue(':title', $article->getTitle(), PDO::PARAM_STR);
+        $prepare->bindValue(':author', $article->getAuthor(), PDO::PARAM_STR);
+        $prepare->bindValue(':message', $article->getMessage(), PDO::PARAM_STR);
+
+        $prepare->execute();
+
+        header('Location: index.php');
+        exit();
+    }
+
+    public function updateArticle(Article $article): void
+    {
+        $query = 'UPDATE article SET title=:title, author=:author, message=:message WHERE id=:id';
+        $prepare = $this->bdd->prepare($query);
+        $prepare->bindValue(':id', $article->getId(), PDO::PARAM_INT);
+        $prepare->bindValue(':title', $article->getTitle(), PDO::PARAM_STR);
+        $prepare->bindValue(':author', $article->getAuthor(), PDO::PARAM_STR);
+        $prepare->bindValue(':message', $article->getMessage(), PDO::PARAM_STR);
+
+        $prepare->execute();
+
+        header('Location: index.php');
+        exit();
+    }
+
+    public function deleteArticle(Article $article): void
+    {
+        $query = 'DELETE FROM article WHERE id=:id';
+        $prepare = $this->bdd->prepare($query);
+        $prepare->bindValue(':id', $article->getId(), PDO::PARAM_INT);
 
         $prepare->execute();
 

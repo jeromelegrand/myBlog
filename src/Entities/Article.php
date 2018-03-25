@@ -34,17 +34,21 @@ class Article
 
     /**
      * Article constructor.
-     * @param int|null $id
-     * @param string|null $title
-     * @param string|null $author
-     * @param string|null $message
+     * @param array contient les champs de l'entité
      */
-    public function __construct(int $id = null, string $title = null, string $author = null, string $message = null)
+    public function __construct(array $data)
     {
-        if ($id === null) {
-            $this->setTitle($title);
-            $this->setAuthor($author);
-            $this->setMessage($message);
+        $this->hydrate($data);
+    }
+
+    public function hydrate(array $data): void
+    {
+        foreach ($data as $key => $value) {
+            $method = 'set' . ucfirst($key);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
         }
     }
 
@@ -83,7 +87,7 @@ class Article
     /**
      * @return mixed
      */
-    public function getAuthor(): int
+    public function getAuthor(): string
     {
         return $this->author;
     }

@@ -1,0 +1,30 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ parent() }} - Modification d'article{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <h1>Modifier un article</h1>
+
+        <form action="index.php" method="post" role="form">
+            <legend>Modification de l'article : {{ article.title }}</legend>
+
+            <div class="form-group">
+                <label for="title">Titre de l'article</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Titre..." value="{{ article.title }}">
+            </div>
+            <div class="form-group">
+                <label for="author">Nom de l'auteur</label>
+                <input type="text" class="form-control" name="author" id="author" placeholder="Auteur..." value="{{ article.author }}">
+            </div>
+            <div class="form-group">
+                <label for="message">Contenu de l'article</label>
+                <textarea class="form-control" name="message" id="message" placeholder="Votre article...">{{ article.message }}</textarea>
+            </div>
+
+            <input type="hidden" class="form-control" name="id" id="id" value="{{ article.id }}">
+
+            <button type="submit" class="btn btn-primary">Modifier</button>
+        </form>
+    </section>
+{% endblock %}

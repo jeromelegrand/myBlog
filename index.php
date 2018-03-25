@@ -1,24 +1,36 @@
 <?php
 
-use App\Controller\blogController;
+use App\Controller\BlogController;
 
 require 'vendor/autoload.php';
 require 'Config/config.php';
 
-$controller = new blogController();
+$blogController = new BlogController();
 
 if (!$_POST) {
     if (!isset($_GET['page'])) {
-        echo $controller->indexAction();
+        echo $blogController->indexAction();
     } else {
         switch ($_GET['page']) {
             case 'add':
-                echo $controller->addArticleAction();
+                echo $blogController->addArticleAction();
+                break;
+            case 'update':
+                echo $blogController->updateArticleAction($_GET['id']);
                 break;
             default:
-                echo $controller->error404();
+                echo $blogController->error404();
         }
     }
 } else {
-    $controller->addArticlePostAction();
+
+    if ($_POST['id']) {
+        if ($_POST['delete'] == true) {
+            $blogController->deleteArticlePostAction();
+        } else {
+            $blogController->updateArticlePostAction();
+        }
+    } else {
+        $blogController->addArticlePostAction();
+    }
 }

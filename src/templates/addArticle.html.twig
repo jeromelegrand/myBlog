@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}{{ parent() }} - Ajout d'article{% endblock %}
+
 {% block body %}
     <section class="container">
         <h1>Ajouter un article</h1>
@@ -21,7 +23,7 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
         </form>
     </section>
 {% endblock %}

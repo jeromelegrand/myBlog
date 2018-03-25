@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% block title %}{{ parent() }} - Liste des articles{% endblock %}
+
 {% block body %}
     <div class="container">
         <h1>Liste des articles</h1>
@@ -15,8 +17,16 @@
                         <cite>{{ article.author }}</cite>
                     </blockquote>
                 </article>
+
+                <button class="btn btn-warning" onclick="document.location.href='index.php?page=update&id={{ article.id }}'">Modifier</button>
+                <form method="post" action="index.php">
+                    <input type="hidden" name="id" id="id" value="{{ article.id }}">
+                    <input type="hidden" name="delete" value="true">
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
                 {% endfor %}
             {% endif %}
+
         </section>
     </div>
 {% endblock %}
