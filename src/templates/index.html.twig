@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des articles</h1>
+        <section>
+            {% if articles | length == 0 %}
+                <h2>Pas encore d'article...</h2>
+            {% else %}
+                {% for article in articles %}
+                <article>
+                    <h2>{{ article.title }}</h2>
+                    <blockquote>
+                        <p>{{ article.message }}</p>
+                        <cite>{{ article.author }}</cite>
+                    </blockquote>
+                </article>
+                {% endfor %}
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

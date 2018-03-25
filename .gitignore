@@ -1,0 +1,4 @@
+Config/config.php
+vendor/
+composer.lock
+src/temp/
