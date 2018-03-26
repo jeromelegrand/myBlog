@@ -8,7 +8,6 @@
 
 namespace App\Entities;
 
-
 /**
  * Class Article
  * @package App\Entities
@@ -50,6 +49,29 @@ class Article
                 $this->$method($value);
             }
         }
+    }
+
+    /**
+     * Test si les paramètres sont vides en vue de validé un formulaire.
+     * @return array
+     */
+    public function testEmptyparameters(): array
+    {
+        $errors = [];
+
+        if ($this->getTitle() === '')  {
+            $errors[] = 'title';
+        }
+
+        if ($this->getAuthor() === '')  {
+            $errors[] = 'author';
+        }
+
+        if ($this->getMessage() === '')  {
+            $errors[] = 'message';
+        }
+
+        return $errors;
     }
 
     /**

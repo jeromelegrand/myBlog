@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-
-
 use App\Entities\Article;
 use App\Entities\Bdd;
 use App\Managers\ArticlesManager;
@@ -11,75 +9,82 @@ use App\Entities\TwigEnvironement;
 
 class BlogController
 {
-    public function indexAction()
-    {
-        $bdd = new Bdd(DSN, USER, PASS);
 
-        $articlesManager = new ArticlesManager($bdd->getPdo());
+    public function indexAction(Bdd $bdd, ArticlesManager $articlesManager, TwigEnvironement $twigEnv)
+    {
+
         $articles = $articlesManager->selectAll();
 
-        $twigEnv = new TwigEnvironement(TEMPLATES);
         $twig = $twigEnv->getTwig();
         return $twig->render('index.html.twig', array('articles' => $articles));
     }
 
-    public function addArticleAction()
+    public function addArticleAction(TwigEnvironement $twigEnv)
     {
-        $twigEnv = new TwigEnvironement(TEMPLATES);
+
         $twig = $twigEnv->getTwig();
-        return $twig->render('addArticle.html.twig', array());
+
+        if ($_SESSION['error']) {
+
+            return $twig->render('addArticle.html.twig', array(
+                'article' => $_SESSION['article'],
+                'error' => $_SESSION['error'],
+            ));
+        } else {
+            return $twig->render('addArticle.html.twig', array());
+        }
     }
 
-    public function addArticlePostAction()
+    public function addArticlePostAction(Bdd $bdd, ArticlesManager $articlesManager, Article $article)
     {
-        $article = new Article($_POST);
+        $_SESSION['error'] = $article->testEmptyparameters();
 
-        $bdd = new Bdd(DSN, USER, PASS);
+        if ($_SESSION['error'] !== []) {
 
-        $articlesManager = new ArticlesManager($bdd->getPdo());
+            $_SESSION['article'] = $article;
+
+            header('Location: index.php?page=add');
+            exit();
+        }
+
         $articlesManager->addArticle($article);
     }
 
-    public function error404()
+    public function error404(TwigEnvironement $twigEnv)
     {
-        $twigEnv = new TwigEnvironement(TEMPLATES);
         $twig = $twigEnv->getTwig();
         return $twig->render('error404.html.twig', array());
     }
 
-    public function updateArticleAction(int $id)
+    public function updateArticleAction(Bdd $bdd, ArticlesManager $articlesManager, TwigEnvironement $twigEnv, int $id)
     {
 
-
-        $bdd = new Bdd(DSN, USER, PASS);
-
-        $articlesManager = new ArticlesManager($bdd->getPdo());
         $article = $articlesManager->selectOne($id);
 
-        $twigEnv = new TwigEnvironement(TEMPLATES);
         $twig = $twigEnv->getTwig();
         return $twig->render('updateArticle.html.twig', array(
             'article' => $article,
+            'error' => $_SESSION['error'],
         ));
     }
 
-    public function updateArticlePostAction()
+    public function updateArticlePostAction(Bdd $bdd, ArticlesManager $articlesManager, Article $article)
     {
-        $article = new Article($_POST);
+        $_SESSION['error'] = $article->testEmptyparameters();
 
-        $bdd = new Bdd(DSN, USER, PASS);
-        $articlesManager = new ArticlesManager($bdd->getPdo());
+        if ($_SESSION['error'] !== []) {
+
+            $_SESSION['error'][] = 'update';
+
+            header('Location: index.php?page=update&id=' . $article->getId());
+            exit();
+        }
 
         $articlesManager->updateArticle($article);
     }
 
-    public function deleteArticlePostAction()
+    public function deleteArticlePostAction(Bdd $bdd, ArticlesManager $articlesManager, Article $article)
     {
-        $article = new Article($_POST);
-        
-        $bdd = new Bdd(DSN, USER, PASS);
-        $articlesManager = new ArticlesManager($bdd->getPdo());
-
         $articlesManager->deleteArticle($article);
     }
 }

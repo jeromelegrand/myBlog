@@ -2,7 +2,6 @@
 
 namespace App\Managers;
 
-
 use App\Entities\Article;
 use \PDO;
 
@@ -58,7 +57,7 @@ class ArticlesManager
         return $article;
     }
 
-    public function addArticle(Article $article): void
+    public function addArticle(Article $article): array
     {
 
         $query = 'INSERT INTO article (title, author, message) VALUES (:title, :author, :message)';
