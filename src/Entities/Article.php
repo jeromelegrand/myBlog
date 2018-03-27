@@ -59,15 +59,15 @@ class Article
     {
         $errors = [];
 
-        if ($this->getTitle() === '')  {
+        if ($this->getTitle() === '') {
             $errors[] = 'title';
         }
 
-        if ($this->getAuthor() === '')  {
+        if ($this->getAuthor() === '') {
             $errors[] = 'author';
         }
 
-        if ($this->getMessage() === '')  {
+        if ($this->getMessage() === '') {
             $errors[] = 'message';
         }
 
@@ -137,6 +137,4 @@ class Article
     {
         $this->message = $message;
     }
-
-
 }

@@ -32,7 +32,6 @@ if (!$_POST) {
         }
     }
 } else {
-
     if ($_POST['id']) {
         if ($_POST['delete'] == true) {
             $blogController->deleteArticlePostAction($bdd, $articlesManager, new Article($_POST));

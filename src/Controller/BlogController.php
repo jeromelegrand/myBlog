@@ -25,7 +25,6 @@ class BlogController
         $twig = $twigEnv->getTwig();
 
         if ($_SESSION['error']) {
-
             return $twig->render('addArticle.html.twig', array(
                 'article' => $_SESSION['article'],
                 'error' => $_SESSION['error'],
@@ -40,7 +39,6 @@ class BlogController
         $_SESSION['error'] = $article->testEmptyparameters();
 
         if ($_SESSION['error'] !== []) {
-
             $_SESSION['article'] = $article;
 
             header('Location: index.php?page=add');
@@ -73,7 +71,6 @@ class BlogController
         $_SESSION['error'] = $article->testEmptyparameters();
 
         if ($_SESSION['error'] !== []) {
-
             $_SESSION['error'][] = 'update';
 
             header('Location: index.php?page=update&id=' . $article->getId());
